@@ -1,0 +1,3 @@
+__dirname  -- gives the constant root path of the application
+nodemon
+body-parser

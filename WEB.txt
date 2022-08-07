@@ -1,0 +1,519 @@
+------------------------------------------
+
+:root {
+    --ff-primary: 'Lora', serif;
+    --ff-secondary: 'Roboto Slab', serif;
+}
+
+ background: var(--clr-light);
+
+--------------------------------------------
+
+Download and use the font
+
+@font-face {
+    src: url("Corleone.ttf");
+    font-family: Corleone;
+}
+
+h1 {
+    font-family: Corleone;
+}
+
+--------------------------------------------
+
+Template Strings
+
+listItems += `
+            <li>
+                <a target='_blank' href='${myLeads[i]}'>
+                    ${myLeads[i]}
+                </a>
+            </li>
+        `
+
+--------------------------------------------
+
+JSON Strings
+
+let myLeads = `["www.awesomelead.com"]`
+
+// 1. Turn the myLeads string into an array
+myLeads = JSON.parse(myLeads)
+
+// 2. Push a new value to the array
+myLeads.push("www.lead2.com")
+
+// 3. Turn the array into a string again
+myLeads = JSON.stringify(myLeads)
+
+// 4. Console.log the string using typeof to verify that it's a string
+console.log(typeof myLeads)
+
+---------------------------------------------
+
+Precision
+
+const totalPrice = 420.69235632455
+const btn = document.getElementById("buy-btn")
+btn.textContent = `Buy €${ totalPrice.toFixed(2) }`
+
+const totalPrice = "420.69235632455"
+const btn = document.getElementById("buy-btn")
+btn.textContent = `Buy €${ Number(totalPrice).toFixed(2) }`
+
+
+----------------------------------------------
+
+Image Resposiveness
+
+Set image width in percentage
+set min-width and max-width
+
+Media Queries
+
+@media (max-width: 600px) {
+    .columns {
+        flex-direction: column;
+    }
+    
+    .col-1,
+    .col-2,
+    .col-3 {
+        width: 100%;
+    }
+}
+
+------------------------------------------------
+
+order-0/1/2/3  - to specify the order in flexbox
+object-fit - cover   - this crops the image to specific height and width
+
+.article-image {
+        width: 100%;
+        min-height: 250px;
+        object-fit: cover;
+        /* object-position: left; */
+    }
+
+
+-------------------------------------------------
+
+STYLING
+
+text-transform: uppercase;
+    letter-spacing: 1px;
+color: rgba(255,255,255, .65);
+
+
+h1 + p {
+    color: #F18119;
+    font-weight: 900;
+    font-size: 1.3125rem;
+}    -------------  Applies to p Immediately after h1
+
+ background: linear-gradient(to right, #ff713b, #ffa51d);
+
+transition: background-color 250ms;
+
+.btn-primary {
+    background-image: linear-gradient(to left, #FF713B, #FFA51D);
+    color: white;
+    transform: scale(1);
+    transition: transform 250ms;
+}
+
+.btn-primary:hover {
+    transform: scale(1.2);
+}
+transform: scale(1); - increase the size of button on hover
+transition: transform 250ms; - time taken for the transition
+
+
+    border-image: linear-gradient(to left, red, blue) 1;
+
+-------------------------------------------------------------
+
+
+Play with background Images and gradients
+
+background-image: url(images/ribs.jpg), linear-gradient(45deg,red, blue);
+    /* background-color: #ff0000; */
+    background-blend-mode: screen;
+
+
+-------------------------------------------------------------
+
+Array to string seperated by parameter in join
+
+const cssClassesString = cssClassesArray.join(' ')
+
+const goldCoins = new Array(1000).fill('🪙')
+
+const poisonMushrooms = new Array(10).fill('🍄').map(function(mushroom){
+    return `<div class="box">${mushroom}</div>`
+}).join('')
+
+--------------------------------------------------------------
+
+Constructor Function
+
+function NationalParkHotels(data){
+    this.name = data.name
+    this.rooms = data.rooms
+    this.stars = data.stars
+    this.costPerNightAdult = data.costPerNightAdult
+    this.costPerNightChild = data.costPerNightChild
+
+or
+
+     Object.assign(this, data)   --- copies data to this
+	
+	this.summariseHotel = function(){
+		const totalPrice = this.costPerNightAdult * 2 + this.costPerNightChild * 2
+		console.log(`A one night stay at the ${this.name} for two adults and 
+		two children costs a total of ${totalPrice}`)
+	}
+}
+
+------------------------------------------------------------------------
+
+Classes and Objects
+
+class AdvertisingChannel {
+    constructor(data){
+        Object.assign(this, data)
+    }
+}
+
+
+
+
+
+-----------------------------------------------------------------
+
+Random Number Generation
+
+Math.floor(Math.random() * 6) + 1
+
+------------------------------------------------------------------
+
+export default characterData  or  export {charData} --- to export a data in a file
+import data from './data.js' or {data}  --- to import data
+
+------------------------------------------------------------------
+
+Reduce function
+
+const rainJanuaryByWeek = [ 10, 20, 0, 122 ]
+
+const totalRainfallJanuary = rainJanuaryByWeek.reduce(function(total, currentElement){
+    
+    return total + currentElement
+})
+
+console.log(totalRainfallJanuary)
+
+
+returns 152
+
+---------------------------------------------------------------------
+
+Arrow functions
+
+"  function name(a){}  " can be written as  "  const name= a => {}   "  
+
+const distanceTraveledKm = distanceTraveledMiles.map( distance => Math.round(distance * 1.6 ))
+
+---------------------------------------------------------------------
+
+Timeout
+
+setTimeout(function () {
+    console.log(answer)
+}, 3000)
+
+executes function after 3 seconds
+
+-------------------------------------------------------------------------
+
+Post in JSON
+
+const options = {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    
+    fetch("https://apis.scrimba.com/jsonplaceholder/posts", options)
+        .then(res => res.json())
+        .then(data => console.log(data))
+})
+
+
+returns --  
+›{title: "s", body: "lll", id: 101}
+
+
+--------------------------------------------------------------------------
+
+function handleClick() {
+    fetch("https://apis.scrimba.com/deckofcards/api/deck/new/shuffle/", function(response){
+        response.json(function(data) {
+            console.log(data)
+            // Do cool stuff with the data here
+        })
+    })
+        // .then(res => res.json())
+        // .then(data => console.log(data))
+}
+
+--------------------------------------------------------------------------------
+
+e.preventdefault() --- doesnt refresh page when form is submitted and data is not displayed in url
+
+--------------------------------------------------------------------------
+
+REST - Representational state transfer
+
+---------------------------------------------------------------------------
+
+callback - 
+setTimeout(function,2000)
+setTimeout(function(),2000)
+
+
+----------------------------------------------------------------------------
+
+Filter Function
+
+const people = [
+    { name: "Jack", hasPet: true },
+    { name: "Jill", hasPet: false },
+    { name: "Alice", hasPet: true },
+    { name: "Bob", hasPet: false },
+]
+
+const peopleWithPets = people.filter(person => person.hasPet)
+console.log(peopleWithPets)
+
+------------------------------------------------------------------------------
+
+Promises
+
+fetch("https://apis.scrimba.com/deckofcards/api/deck/new/shuffle/")
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .then(callback)
+promise chaining
+    
+/* 
+- Promises are in one of 3 states at any given time
+    - Pending
+    - Fulfilled - run .then() block
+    - Rejected
+*/
+
+
+
+fetch("https://apis.scrimba.com/bored/api/activity")
+    .then(function(res) {
+        return "Hello"  -- returns to next function
+    })
+    .then(function(whatever) {
+        console.log(whatever)
+        return "World"     -- returns to next function
+    })
+    .then(function(another) {
+        console.log(another)
+    })
+
+
+----------------------------------------------------------------------------------
+
+Async/Await
+
+
+function handleClick() {
+    fetch("https://apis.scrimba.com/deckofcards/api/deck/new/shuffle/")
+        .then(res => res.json())
+        .then(data => {
+            remainingText.textContent = `Remaining cards: ${data.remaining}`
+            deckId = data.deck_id
+            console.log(deckId)
+        })
+	
+}
+
+can be written as
+
+// async function handleClick() {
+//     const response = await fetch("https://apis.scrimba.com/deckofcards/api/deck/new/shuffle/")
+//     const data = await res.json()
+//     remainingText.textContent = `Remaining cards: ${data.remaining}`
+//     deckId = data.deck_id
+//     console.log(deckId)
+// }
+
+------------------------------------------------------------------------------------
+
+Handle promise rejections
+
+fetch("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=;hjksdf;kljsdfgl;kdsjfgljksdfglkjhsdfg")
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        throw Error("Something went wrong")
+	---	this is in err
+        // document.body.style.backgroundImage = `url(${data.urls.regular})`
+		// document.getElementById("author").textContent = `By: ${data.user.name}`
+    })
+    .catch(err => {
+        console.log("Something went wrong! 😭")
+        // This is where I can handle the error
+        // Choose to use a default backgronud image
+    })
+
+
+
+--------------------------------------------------------------------------------
+
+Get Current Time
+
+function getCurrentTime() {
+    const date = new Date()
+    document.getElementById("time").textContent = date.toLocaleTimeString("en-us", {timeStyle: "short"})
+}
+
+setInterval(getCurrentTime, 1000)
+
+---------------------------------------------------------------------------------
+
+FLEX-BOX
+
+flex-direction: row;
+    flex-wrap: wrap;
+flex-flow: row-reverse wrap;
+
+align-items:baseline --- align based on text inside the container
+
+flex-grow: 1; -- grows with the width
+flex-shrink: 1;  -- shrinks with the width
+flex-basis: 400px; --- stops growing at this point
+
+flex:1 0 auto -- grow shrink flex-basis
+
+
+
+-------------------------------------------------------------------------------------
+
+CSS GRIDS
+
+ display: grid;
+    grid-template-columns: 300px 100px 100px 200px;
+    grid-template-rows: 750px 500px
+
+or 
+
+grid-template: 100px 400px / 250px 250px 250px;
+
+to place the element
+ grid-column-start: 1;
+  grid-column-end: 4;
+  
+  grid-row-start: 2;
+  grid-row-end: 4;
+
+
+or 
+
+grid-row: 2 / 3;
+    grid-column: 1 / 4; or  span 4
+
+
+grid-gap: 0 2em;
+
+
+
+----------------------------------------------------------------------------------
+
+.grid {
+  display: grid;
+  grid-template-columns: 150px 150px 200px;
+  grid-template-areas: 
+    "sidebar header header" 
+    "sidebar content content"
+    "sidebar footer footer";
+}
+
+.header {
+  grid-area: header;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.big {
+  grid-area: content;
+}
+
+". footer .";  -- for blank spaces
+--------------------------------------------------------------------------------------
+
+MIN-MAX
+
+grid-template-columns: 100px minmax(200px, 500px) minmax(100px, 200px) 100px;
+
+-------------------------------------------------------------------------------------
+
+Fraction grid size
+
+grid-template-columns: 1fr 1fr 2fr;
+
+Repeat function
+
+grid-template-columns: repeat(3, minmax(200px, 300px));
+
+Autofill,autofit
+
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+ if minsize of 200 fits for two blocks then it resizes to 2 blocks --- fills inn empty columns
+
+auto-fit --- doesnt fill the empty columns
+
+
+
+
+display: grid;
+    grid-template-columns: repeat(4, 25%);
+    grid-template-rows: repeat(5, 20%);
+    height: 100vh;
+
+
+** grid-template-columns: repeat(12, calc(100% / 12));
+
+background: linear-gradient(322deg, rgba(113,174,33,1) 29%, rgba(28,28,28,1) 29%, rgba(28,28,28,1) 40%, rgba(113,174,33,1) 40%, rgba(113,174,33,1) 48%, rgba(28,28,28,1) 48%, rgba(28,28,28,1) 92%, rgba(113,174,33,1) 92%, rgba(113,174,33,1) 100%);
+
+-----------------------------------------------------------------------------------------
+
+position: static
+By default, position an element based on its current position in the flow. The top, right, bottom, left and z-index properties do not apply. — source MDN
+
+position: relative
+Position an element based on its current position without changing layout.
+
+position: absolute
+Position an element based on its closest positioned ancestor position.
+
+----------------------------------------------------------------------------------------------
+
+    transition: filter .1s ease-in-out;
+
+    filter: brightness(50%);
+
+-----------------------------------------------------------------------------------------------
+
+
