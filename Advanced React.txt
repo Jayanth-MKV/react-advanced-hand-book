@@ -1,0 +1,382 @@
+----------------------------------------------------------------------------
+
+Class Components
+
+// export default function App(props) {          --- functional component
+//     return (
+//         <h1>{props.type} component</h1>
+//     )
+// }
+
+export default class App extends React.Component {
+    render() {
+        return (
+            <h1>{this.props.type} component</h1>
+        )
+    }
+}
+
+
+------------------------------------------------------------------------------
+
+OLD SYNTAX ( state and setState )
+
+export default class App extends React.Component {
+    /**
+     * A class component with state will ALWAYS save state in a class
+     * instance variable called `state`, which will always be an object.
+     * The individual values you save in state will be properties on
+     * the `state` object.
+     * 
+     * The simplest (and more modern) way to delcare new state in a
+     * class component is to just use a "class field" declaring state
+     * as an object, like you see below.
+     * 
+     * Then, throughout the rest of the component (e.g. inside the render
+     * method) you can access that state with `this.state.<yourPropertyHere>`
+     */
+    state = {
+        goOut: "Yes"
+    }
+    
+    
+    /**
+     * Any class methods you create that need to call the `this.setState`
+     * method (which is available to our component because we're extending
+     * React.Component) should be declared as an arrow function, for 
+     * reasons we will discuss soon. (Note: other class methods you
+     * want to make that DON'T use `this.setState` don't necessarily
+     * need to be declared as arrow function to work correctly)
+     */
+    toggleGoOut = () => {
+        this.setState(prevState => {
+            return {
+                goOut: prevState.goOut === "Yes" ? "No" : "Yes"
+            }
+        })
+    }
+    
+    render() {
+        return (
+            <div className="state">
+                <h1 className="state--title">Should I go out tonight?</h1>
+                <div className="state--value" onClick={this.toggleGoOut}>
+                    <h1>{this.state.goOut}</h1>
+                </div>
+            </div>
+        )
+    }
+}
+
+
+Here the setState works as assigning the objects like copying the objects.
+Hence, ...prevstate is not required
+
+toggleFavorite = () => {
+        this.setState(prevContact => ({
+            isFavorite: !prevContact.isFavorite
+        }))
+    }
+
+----------------------------------------------------------------------------------------------
+
+OLD SYNTAX
+(constructor)
+
+import React from "react"
+
+export default class App extends React.Component {
+    /**
+     * If you can't use class fields in your class components
+     * for some reason, then you'll need to make use of the
+     * class' `constructor` method to initialize your state object.
+     * The first line of the constructor method should be a call
+     * to `super()` like you see below, and then you can add your
+     * state variable as a property attached to `this`
+     */
+    constructor(props) {
+        super(props)
+        this.state = {
+            goOut: "Yes"
+        }
+        this.toggleGoOut = this.toggleGoOut.bind(this)
+    }
+    
+    /**
+     * If you can't use arrow functions for your class methods,
+     * you'll need to make sure to `bind` them inside the 
+     * constructor above.
+     */
+    
+    toggleGoOut() {
+        this.setState(prevState => {
+            return {
+                goOut: prevState.goOut === "Yes" ? "No" : "Yes"
+            }
+        })
+    }
+    
+    render() {
+        return (
+            <div className="state">
+                <h1 className="state--title">Should I go out tonight?</h1>
+                <div className="state--value" onClick={this.toggleGoOut}>
+                    <h1>{this.state.goOut}</h1>
+                </div>
+            </div>
+        )
+    }
+}
+------------------
+EX:
+
+ constructor() {
+        super()
+        this.state = {
+            count: 0
+        }
+        this.add = this.add.bind(this)
+        this.subtract = this.subtract.bind(this)
+    }
+    
+    add() {
+        this.setState(prevState => ({count: prevState.count + 1}))
+    }
+    
+    subtract() {
+        this.setState(prevState => ({count: prevState.count - 1}))
+    }
+
+----------------------------------------------------------------------------------------------
+
+
+Lifecycle
+
+componentDidMount() {
+        console.log("componentDidMount")
+        fetch("https://swapi.dev/api/people/1")
+            .then(res => res.json())
+            .then(data => {
+                this.setState({character: data})
+            })
+    }
+
+same as
+    
+    React.useEffect(() => {
+        // Your code here
+    }, [])
+
+
+----------------------------------------------------------------------------------------
+
+componentDidUpdate() {
+        console.log("Update")
+        localStorage.setItem("formData", JSON.stringify(this.state))
+        
+    }
+
+--- runs again when the component re-renders
+
+-------------------------------------------------------------------------------------------
+
+componentDidMount() {
+        window.addEventListener("resize", this.watchWidth)
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.watchWidth)
+        // Disconnect any subscriptions
+    }
+
+-------------------------------------------------------------------------------------------
+
+REACT CHILDREN
+
+<CTA>
+     <h1>This is an important CTA</h1>
+     <button>Click me now or you'll miss out!</button>
+</CTA>
+
+function CTA(props) {
+    return (
+        <div className="border">
+            {props.children}
+        </div>
+    )
+}
+
+export default CTA
+
+-------------------------------------------------------------
+
+
+Higher Order Component 
+
+export function withExtraPropAdded(component) {
+    const Component = component
+    return function(props) {
+        return (
+            <Component anotherProp="Blah blah blah" {...props} />
+        )
+    }
+}
+
+import {withPointlessHOC} from "./withPointlessHOC"
+
+used to add extra arguments and also with additional props
+
+------------------------------------------------------------------------------------------
+
+class Toggler extends Component {
+    state = {
+        on: false
+    }
+    
+    toggle = () => {
+        this.setState(prevState => {
+            return {
+                on: !prevState.on
+            }
+        })
+    }
+    
+    render() {
+        const Component = this.props.component
+        return (
+            <Component on={this.state.on} toggle={this.toggle} {...this.props} />
+        )
+    }
+}
+
+export function withToggler(component) {
+    return function(props) {
+        return (
+            <Toggler component={component} {...props}/>
+        )
+    }
+}
+
+
+This code can be reused by two different components to use the same logic.
+
+export default withToggler(Menu, {defaultOnValue: true})
+
+if
+
+export function withToggler(component, optionsObj) {
+    return function(props) {
+        return (
+            <Toggler component={component} defaultOnValue={optionsObj.defaultOnValue} {...props}/>
+        )
+    }
+}
+
+-----------------------------------------------------------------------------------------------
+
+ 
+RENDER PROPS
+
+<Example render={
+                function(name) {
+                    return <h1>Hey there, {name}</h1>
+                }
+            }/>
+
+function Example(props) {
+    return (
+        <div>
+            {props.render("Sarah")}
+        </div>
+    )
+}
+
+---------------------------------------------------------------------------------------------------
+
+Toggler.defaultProps = {
+    defaultOnValue: false
+}
+
+or
+
+static defaultProps = {
+        defaultOnValue: false
+    }
+    
+
+-----------------------------------------------------------------------------------------------------
+
+REACT RENDERING TREE
+
+rendering happens in a heirarchial manner
+
+grand-parent
+parent
+child
+grand-child
+
+------------------------------------------------------------------------------------------
+
+shallow comparision
+
+===
+
+Primitive types (strings, numbers, booleans)
+console.log("Hi" === "Hi")
+
+const person = {
+    name: "Sarah"
+}
+
+const anotherPerson = person
+
+console.log(anotherPerson === person)
+
+
+------------------------------------------------------------------------------------------
+
+const arr1 = [1, 2, 3, [4]]
+const arr2 = [1, 2, 3, [4]]
+
+are not shallow equal
+
+const arr1 = [1, 2, 3]
+const arr2 = [1, 2, 3]
+
+are shallow equal
+
+-------------------------------------------------------------------------------------------
+
+Performance in react
+
+1.shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.count === this.props.count) {
+            return false
+        }
+        return true
+    }
+
+2. Extend purecomponent instead of Component.
+
+The above are for the class components
+
+For functional components use React.Memo()
+
+memo() - only checks prev and next props
+
+
+This is memoization - which means react caches the props for refering if any changes occured.
+
+use like this
+
+import React, {memo} from "react"
+
+export default React.memo(function Parent() {}
+
+or
+
+export default React.memo(GrandParent, areEqual)
+
+where areEqual is the comparision function.
+
+--------------------------------------------------------------------------------

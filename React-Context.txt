@@ -1,0 +1,118 @@
+--------------------------------------------------------------------------------------------
+
+REACT CONTEXTS
+
+--------------------------------------------------------------------------------------------
+
+When there is need of sharing data between the siblings without the intervention of the other 
+components and making this possible in a direct manner contexts are used.
+
+def: Context provides a way to pass data through the component tree without having to pass 
+	props down manually at every level.
+
+
+import React from "react"
+import ReactDOM from "react-dom"
+
+import App from "./App"
+
+const ThemeContext = React.createContext()  --- put this in seperate file
+static contextType = ThemeContext
+ReactDOM.render(
+    <ThemeContext.Provider value={"light"}>
+        <App />
+    </ThemeContext.Provider>, 
+    document.getElementById("root")
+)
+
+
+to use the context created in the child components we use 
+static contextType = ThemeContext
+
+and inside header class use this.context to get the value of the context.
+
+---------------------------------------------------------------------------------------------
+
+1. Create seperate context file.
+2. Import to parent and include it as ReactDOM.render(
+    <UserContext.Provider value={"bobz123"}>
+        <App />
+    </UserContext.Provider>, 
+    document.getElementById("root")
+)
+
+3. Import this to use in the needed file .
+4. use it by including this in code
+	    static contextType = UserContext
+5. or use 
+function Header(props) {
+    return (
+        <ThemeContext.Consumer>
+            {theme => (
+                <header className={`${theme}-theme`}>
+                    <h2>{theme === "light" ? "Light" : "Dark"} Theme</h2>
+                </header>
+            )}
+        </ThemeContext.Consumer>
+    )    
+}
+
+-------------------------------------------------------------------------------------------------
+
+
+caveats
+
+https://reactjs.org/docs/context.html#caveats
+
+--------------------------------------------------------------------------------------------------
+
+
+
+useref
+
+
+import React, {useState, useRef} from "react"
+
+function App() {
+    const [newTodoValue, setNewTodoValue] = useState("")
+    const [todosList, setTodosList] = useState([])
+    const inputRef = useRef(null)
+    
+    function handleChange(event) {
+        setNewTodoValue(event.target.value)
+    }
+    
+    function addTodo(event) {
+        event.preventDefault()
+        setTodosList(prevTodosList => [...prevTodosList, newTodoValue])
+        setNewTodoValue("")
+        inputRef.current.focus()
+    }
+    
+    const allTodos = todosList.map(todo => <p key={todo}>{todo}</p>)
+    
+    return (
+        <div>
+            <form>
+                <input ref={inputRef} type="text" name="todo" value={newTodoValue} onChange={handleChange}/>
+                <button onClick={addTodo}>Add todo item</button>
+            </form>
+            {allTodos}
+        </div>
+    )
+}
+
+export default App
+
+--------------------------------------------------------------------------------------------------------------------------
+
+useContext hook
+
+    const context = useContext(ThemeContext)
+
+ <ThemeContext.Provider value={{theme, toggleTheme}}>
+            {props.children}
+        </ThemeContext.Provider>
+
+------------------------------------------------------------------------------------------
+

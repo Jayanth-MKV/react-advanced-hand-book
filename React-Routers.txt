@@ -1,0 +1,265 @@
+----------------------------------------------------------------------------------------------
+
+React Routers
+
+---------------------------------------------------------------------------------------------------
+
+1. BrowserRouter
+
+import React from "react"
+import ReactDOM from "react-dom"
+import {BrowserRouter} from "react-router-dom"
+
+import App from "./App"
+
+ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>, 
+    document.getElementById("root")
+)
+
+---------------------------------------------------------------------------------------------------
+
+2. Link
+
+import React from "react"
+import {Link} from "react-router-dom"
+
+function App() {    
+    return (
+        <div>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+        </div>
+    )
+}
+
+export default App
+
+
+------------------------------------------------------------------------------------------------
+
+3. Switch,Render
+
+import React from "react"
+import {Link, Switch, Route} from "react-router-dom"
+
+import Home from "./Home"
+import About from "./About"
+
+function App() {    
+    return (
+        <div>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+            
+            <Switch>
+                <Route exact path="/" render={() => <Home />} />
+                <Route path="/about" render={() => <About />} />
+            </Switch>
+        </div>
+    )
+}
+
+export default App
+
+or
+
+
+		<Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/about" component={About} />
+            </Switch>
+
+or 
+
+                <Route exact path="/"><Home /></Route>
+
+
+------------------------------------------------------------------------------------------------
+
+Example
+
+import React from "react"
+import {Switch, Route, Link} from "react-router-dom"
+
+import Home from "./Home"
+import About from "./About"
+import Contact from "./Contact"
+
+function App() {    
+    return (
+        <div>
+            <nav>
+                <Link to="/">Home</Link>
+                <Link to="/about">About</Link>
+                <Link to="/contact">Contact</Link>
+            </nav>
+            
+            <Switch>
+                <Route exact path="/">
+                    <Home/>
+                </Route>
+                <Route path="/about">
+                    <About/>
+                </Route>
+                <Route path="/contact">
+                    <Contact/>
+                </Route>
+            </Switch>
+        </div>
+    )
+}
+
+export default App
+
+----------------------------------------------------------------------------------------------
+
+Nesting routes like /profile/settings
+
+------------------------------------------------------------------------------------------
+
+Dynamic Routing
+
+import React from "react"
+import servicesData from "./servicesData"
+import {Link} from "react-router-dom"
+
+function ServicesList() {
+    const services = servicesData.map(service => (
+        <h3 key={service._id}>
+            <Link to={`/services/${service._id}`}>{service.name}</Link> - ${service.price}
+        </h3>
+    ))
+    return (
+        <div>
+            <h1>Services List Page</h1>
+            {services}
+        </div>
+    )
+}
+
+export default ServicesList
+
+---------------------------------------------------------------------------------------------------------
+
+USEPARAMS
+
+import React from "react"
+import {useParams} from "react-router-dom"
+import servicesData from "./servicesData"
+
+function ServiceDetail(props) {
+    const {serviceId} = useParams()
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+    const thisService = servicesData.find(service => service._id === serviceId)
+    
+    return (
+        <div>
+            <h1>Service Detail Page</h1>
+            <h3>{thisService.name} - ${thisService.price}</h3>
+            <p>{thisService.description}</p>
+        </div>
+    )
+}
+
+export default ServiceDetail
+
+-----------------------------------------------------------------------------------------------------
+
+USEROUTEMATCH
+
+    const {path, url} = useRouteMatch()
+
+
+--------------------------------------------------------------------------------------------------
+
+USEHISTORY
+
+import React from "react"
+import {useParams, useHistory} from "react-router-dom"
+
+import servicesData from "./servicesData"
+
+function ServiceDetail() {
+    const {serviceId} = useParams()
+    const history = useHistory()
+    const thisService = servicesData.find(service => service._id === serviceId)
+
+    
+    function handleClick() {
+        console.log("Submitting...")
+        setTimeout(() => {
+            history.push("/services")
+        }, 2000)
+        history.replace("")
+    }
+    
+    return (
+        <div>
+            <h1>Service Detail Page</h1>
+            <h3>{thisService.name} - ${thisService.price}</h3>
+            <p>{thisService.description}</p>
+            <button onClick={handleClick}>Go back to all services</button>
+        </div>
+    )
+}
+
+export default ServiceDetail
+
+----------------------------------------------------------------------------------------------
+
+USELOCATION
+
+ const location = useLocation()
+    console.log(location)
+    
+// {
+//     pathname: "/services", 
+//     search: "?something=hello&blah=goodbye", 
+//     hash: "", 
+//     state: null, 
+//     key: "qyfp8w"
+// }
+
+----------------------------------------------------------------------------------------------
+
+REDIRECT
+
+import React, {useState} from "react"
+import {Link, Switch, Route, Redirect} from "react-router-dom"
+
+// https://reacttraining.com/react-router/web/example/auth-workflow
+
+function App() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    return (
+        <div>
+            <Link to="/">Home</Link>
+            <Link to="/private">Private</Link>
+            
+            <Switch>
+                <Route exact path="/">
+                    <h1>Home page, anyone is allowed here</h1>
+                </Route>
+                <Route path="/private">
+                    {
+                        isLoggedIn ?
+                        <h1>Protected page, must be logged in to be here</h1> :
+                        <Redirect to="/login" />
+                    }
+                </Route>
+                <Route path="/login">
+                    <button onClick={() => setIsLoggedIn(true)}>Log in</button>
+                </Route>
+            </Switch>
+        </div>
+    )
+}
+
+export default App
+
+-------------------------------------------------------------------------------------------------
+
+
