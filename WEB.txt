@@ -237,7 +237,7 @@ executes function after 3 seconds
 
 -------------------------------------------------------------------------
 
-Post in JSON
+Post in JSON 
 
 const options = {
         method: "POST",
